@@ -3,6 +3,8 @@ const express = require('express');
 const http = require('http');
 const socketio = require('socket.io');
 const cors = require('cors');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
@@ -227,8 +229,8 @@ function generateUniqueRoomId() {
   return roomId;
 }
 
+const PORT = process.env.PORT
 
-const port = 5000;
-server.listen(port, () => {
-  console.log(`Server listening on http://localhost:${port}`);
+server.listen( PORT , () => {
+  console.log(`Server listening on http://localhost:${PORT}`);
 });
