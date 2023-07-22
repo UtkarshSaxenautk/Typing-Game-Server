@@ -231,6 +231,10 @@ function generateUniqueRoomId() {
 
 const PORT = process.env.PORT
 
+app.get('/', (req, res) => {
+    res.send("welcome to electric bill optimizer server");
+})
+
 server.listen( PORT , () => {
   console.log(`Server listening on http://localhost:${PORT}`);
 });
