@@ -18,6 +18,17 @@ const io = socketio(server, {
 // Store connected clients and their selected difficulty levels
 const rooms = new Map();
 
+const ROOM_LIMIT_PER_DIFFICULTY = 1000;
+
+function generateUniqueRoomId() {
+  let roomId;
+  do {
+    roomId = Math.random().toString(36).substr(2, 5);
+  } while (rooms.has(roomId));
+
+  return roomId;
+}
+
 io.on('connection', (socket) => {
   console.log('New client connected: ', socket.id);
 
@@ -38,7 +49,11 @@ io.on('connection', (socket) => {
       socket.emit('room-joined', { roomId: currentRoom.roomId, usernameExists: true });
     } else {
       // Create a new room with the selected difficulty and the username
-      const roomId = Math.random().toString(36).substr(2, 5);
+      if (rooms.size > ROOM_LIMIT_PER_DIFFICULTY) {
+        const roomId = "no";
+         socket.emit('room-created', {roomId});
+      }
+      const roomId = generateUniqueRoomId();
       const newRoom = {
         roomId,
         difficulty,
@@ -197,6 +212,21 @@ function getRandomNumber() {
 
   return randomNumber;
 }
+
+function generateUniqueRoomId() {
+  // Generate a random string of characters
+  const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const roomIdLength = 5;
+  let roomId = '';
+
+  for (let i = 0; i < roomIdLength; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    roomId += characters.charAt(randomIndex);
+  }
+
+  return roomId;
+}
+
 
 const port = 5000;
 server.listen(port, () => {
